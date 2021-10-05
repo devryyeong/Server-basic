@@ -11,6 +11,7 @@
         <title>Hello, world!</title>
     </head>
     <body>
+        <!-- navbar -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">Todo</a>
@@ -38,6 +39,7 @@
                         </li>
                     </ul>
                     
+                    <!-- navbar search -->
                     <form class="d-flex">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Search</button>
@@ -49,23 +51,21 @@
         <!-- Jumbotron -->
         <div class="p-5 mb-4 bg-light rounded-3">
             <div class="container-fluid py-5">
-                <h1 class="display-5 fw-bold">Write Your To-Do.</h1>
-                <p class="col-md-8 fs-4">
-                    Velit ad dolor nostrud ad reprehenderit enim minim pariatur minim qui.
-                    Minim eiusmod labore est eiusmod ex aliqua nulla elit dolore occaecat ut dolor aliquip.</p>
+                <h1 class="display-5 fw-bold">서버에서 가져온 TO DO LIST</h1>
+                <p class="col-md-8 fs-4">해야할 일을 적어보아요~ <br>서버스터디는 정말 재밌어~</p>
                 <button class="btn btn-primary btn-lg" type="button">write</button>
             </div>
         </div>
 
-        <h4>서버에서 가져온 TO DO LIST</h4>
-        <!-- 
-        <h6>제목: <%= posts[0].contents %></h6>
-        <p>내용: </p> 
-        -->
-
+        <!-- Checks -->
         <% for(var i=0; i<posts.length; i++){ %>
-            <h6>제목: <%= posts[i].title %></h6>
-            <p>내용: <%= posts[i].contents %></p>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                    제목: <%= posts[i].title %>
+                </label>
+                <p>내용: <%= posts[i].contents %></p>
+            </div>
         <% } %>
 
 
