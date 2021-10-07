@@ -68,7 +68,7 @@ app.post('/add', function(req, res){
             //1]어떤 데이터를 수정할지
             //2]수정할 값. operator(set,inc,,,) 사용
             //3]콜백함수.(순차적 실행을 위해) 생략가능
-            db.collection('counter').updateOne({name:'게시물갯수'}, {$inc: {totalPost:1}}, function(err, res){
+            db.collection('counter').updateOne({name:'게시물갯수'}, {$inc: {totalPost:1}}, function(err, result){
                 if(err) return console.log(err);
             })
         });
@@ -85,3 +85,29 @@ app.get('/list', function(req, res){
         res.render('list.ejs', { posts: result });
     });
 });
+
+//삭제
+app.delete('/delete', function(req, res){
+    console.log(req.body);
+
+    //문자->정수 변환 필요함
+    req.body._id=parseInt(req.body._id);
+
+    db.collection('post').deleteOne(req.body, function(err, result){
+        console.log('삭제완료');
+        //서버는 꼭 뭔가 응답해줘야함
+        res.status(200).send({ message: '성공'});
+    })
+})
+
+//'/detail'로 접속하면 detail.ejs 보여줌
+//:id=url의 parameter
+app.get('/detail/:id', function(req, res){
+    db.collection('post').findOne({_id : parseInt(req.params.id)}, function(err, result){
+        if(err) return res.sendStatus(400).send(err);
+
+        console.log(result);
+        //{이런이름으로 : 이런데이터를}
+        res.render('detail.ejs', {data : result});
+    })
+})
