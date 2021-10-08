@@ -107,7 +107,7 @@ app.get('/detail/:id', function(req, res){
         if(err) return res.sendStatus(400).send(err);
 
         console.log(result);
-        //{이런이름으로 : 이런데이터를}
+        //{'data'라는 이름으로 : result 데이터를}
         res.render('detail.ejs', {data : result});
     })
 })
