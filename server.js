@@ -64,7 +64,7 @@ app.post('/add', function(req, res){
         db.collection('post').insertOne( { _id: totalCnt+1, title : req.body.title, contents : req.body.contents}, function(err, res){
             console.log('저장완료');
 
-            //counter라는 collection에 있는 totalPost도 +1 해줘야함.
+            //counter라는 collection에 있는 totalPost도 +1 해줘야함. parameter 3가지.
             //1]어떤 데이터를 수정할지
             //2]수정할 값. operator(set,inc,,,) 사용
             //3]콜백함수.(순차적 실행을 위해) 생략가능
