@@ -75,7 +75,7 @@
         <script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
 
         <script>
-            //dekete라는 클래스명을 가진 요소를 클릭하면 내부$.ajax({})를 실행해
+            //delete라는 클래스명을 가진 요소를 클릭하면 내부$.ajax({})를 실행해
             $('.delete').click(function(e){
                 //글번호=내가 클릭한 요소(e.target)의 data-id
                 var listNum= e.target.dataset.id;
@@ -92,7 +92,7 @@
                     pushedBtn.parent('div').fadeOut();
 
                 }),fail(function(xhr, textStatus, errorThrown){
-                    console.log(xhr, textStatus, errorThrown);
+                    //console.log(xhr, textStatus, errorThrown);
                 });
             })
         </script>
