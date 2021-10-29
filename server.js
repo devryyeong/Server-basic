@@ -11,7 +11,11 @@ app.use(express.urlencoded({extended : true}));
 //요청 데이터(body) 해석을 쉽게 도와줌
 //express 4.16이상은 필요X
 const MongoClient = require('mongodb').MongoClient;
-app.set('view engine', 'ejs'); //HTML에 서버데이터 삽입 가능
+
+//HTML에 서버데이터 삽입 가능
+app.set('view engine', 'ejs');
+//미들웨어
+app.use('/public', express.static('public'));
 
 var db;
 MongoClient.connect(MONGODB_URI, 
@@ -93,6 +97,7 @@ app.delete('/delete', function(req, res){
     //문자->정수 변환 필요함
     req.body._id=parseInt(req.body._id);
 
+    //req.body에 담겨온 게시물 번호를 가진 글을 DB에서 찾아 삭제
     db.collection('post').deleteOne(req.body, function(err, result){
         console.log('삭제완료');
         //서버는 꼭 뭔가 응답해줘야함
@@ -100,8 +105,8 @@ app.delete('/delete', function(req, res){
     })
 })
 
-//'/detail'로 접속하면 detail.ejs 보여줌
-//:id=url의 parameter
+//<상세페이지>: '/detail'로 접속하면 detail.ejs 보여줌
+//':id'= url의 parameter
 app.get('/detail/:id', function(req, res){
     db.collection('post').findOne({_id : parseInt(req.params.id)}, function(err, result){
         if(err) return res.sendStatus(400).send(err);
