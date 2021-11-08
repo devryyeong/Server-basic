@@ -12,6 +12,9 @@ app.use(express.urlencoded({extended : true}));
 //express 4.16이상은 필요X
 const MongoClient = require('mongodb').MongoClient;
 
+const methodOverride = require('method-override')
+app.use(methodOverride('_method'))
+
 //HTML에 서버데이터 삽입 가능
 app.set('view engine', 'ejs');
 //미들웨어
@@ -40,12 +43,22 @@ app.get('/pet', function(req, res){
     res.send("pet page");
 });
 
+// app.get('/', function(req, res){
+//     res.sendFile(__dirname+'/index.html');
+// });
+
+// app.get('/write', function(req, res){
+//     res.sendFile(__dirname+'/write.html');
+// });
+
 app.get('/', function(req, res){
-    res.sendFile(__dirname+'/index.html');
+    //res.sendFile(__dirname+'/index.html');
+    res.render('index.ejs');
 });
 
 app.get('/write', function(req, res){
-    res.sendFile(__dirname+'/write.html');
+    //res.sendFile(__dirname+'/write.html');
+    res.render('write.ejs');
 });
 
 
@@ -114,5 +127,13 @@ app.get('/detail/:id', function(req, res){
         console.log(result);
         //{'data'라는 이름으로 : result 데이터를}
         res.render('detail.ejs', {data : result});
+    })
+})
+
+app.get('/edit/:id', function(req, res){
+    //params.id: url의 파라미터 중 ':id'
+    db.collection('post').findOne({_id: parseInt(req.params.id)}, function(err, result){
+        if(err) return res.sendStatus(400).send(err);
+        res.render('edit.ejs', {post: result});
     })
 })

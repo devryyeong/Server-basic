@@ -1,0 +1,38 @@
+<!-- 글을 발행할 수 있는 page -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+        <link rel="stylesheet" href="/public/main.css">
+        
+        <title>Write</title>
+    </head>
+
+    <body>
+        <!-- navbar -->
+        <%- include('nav.html') %>
+
+        <h5>뭐해야하지?</h5>
+        <div class="container mt-4">
+            <form action="/add" method="POST">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-default">제목</span>
+                    <input type="text" class="form-control" name="title">
+                </div>
+                
+                <div class="input-group mb-3">
+                    <span class="input-group-text">내용</span>
+                    <input type="text" class="form-control" name="contents"></input>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button class="btn btn-primary" type="submit">저장</button>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>
