@@ -1,8 +1,8 @@
 //실행: nodemon server.js
 require('dotenv').config(); //.env파일에서 환경변수 불러오기
-const { PORT, MONGODB_URI }=process.env;
+const { PORT, MONGODB_URI } = process.env;
 
-const port= PORT || 4000;
+const port = PORT || 4000;
 const { response } = require('express');
 const express = require('express');
 const app = express();
@@ -11,7 +11,7 @@ app.use(express.urlencoded({extended : true}));
 //요청 데이터(body) 해석을 쉽게 도와줌
 //express 4.16이상은 필요X
 const MongoClient = require('mongodb').MongoClient;
-
+//method-override: HTML에서 PUT/DELETE 요청하기 위해
 const methodOverride = require('method-override')
 app.use(methodOverride('_method'))
 
@@ -32,8 +32,6 @@ function(err, client){
         console.log(`listening at http://localhost:${port}`);
     });
 })
-
-
 
 //누군가가 /pet으로 방문을 하면
 //pet 관련 안내문을 띄워주자 ->콜백함수를 이용해서
@@ -136,4 +134,73 @@ app.get('/edit/:id', function(req, res){
         if(err) return res.sendStatus(400).send(err);
         res.render('edit.ejs', {post: result});
     })
+})
+
+app.put('/edit', function(req, res){
+    //폼에 담긴 제목,날짜 데이터를 가지고 db.collection에 업데이트
+    //updateOne(어떤게시물수정할건지,수정값,콜백함수)
+    db.collection('post').updateOne({_id: parseInt(req.body.id)}, {$set: {title: req.body.title, contents: req.body.contents}}, function(err, result){
+        console.log('수정완료');
+        //수정완료하면 list로 이동
+        //응답코드가 꼭 필요함!!!안그러면 서버멈춤
+        res.redirect('/list'); 
+    })
+})
+
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const session = require('express-session');
+
+//요청과 응답 중간에서 작동하는 미들웨어
+app.use(session({secret:'비밀코드', resave:true, saveUninitialized:false}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get('/login', function(req, res){
+    res.render('login.ejs');
+})
+
+//[1] '/login'으로 POST요청 하면 (로그인 요청하면)
+app.post('/login', passport.authenticate('local',{
+    failureRedirect: '/fail'
+}), function(req, res){
+    res.redirect('/')
+});
+
+//[2] 여기서 아이디와 비밀번호를 검증하고.
+//Strategy: 인증하는 방법
+passport.use(new LocalStrategy({
+    //유저가 입력한 아이디, 비번 항목이 뭔지 정의 (name 속성)
+    usernameField:'id',
+    passwordField:'pw',
+    session: true, 
+    passReqToCallback: false,
+}, function(inputId, inputPw, done){ //콜백함수에서 사용자가 입력한 아이디, 비번 검증
+    //done(서버에러, 성공시 사용자 DB데이터, 에러메세지)
+    console.log(inputId, inputPw);
+    db.collection('login').findOne({id: inputId}, function(err, result){
+        if(err) return done(err)
+
+        //DB에 아이디가 없을때
+        if(!result) return done(null, false, {message:'존재하지 않는 아이디입니다.'})
+
+        //pw가 암호화되지 않음 -> 보안이 개th-레기
+        if(inputPw==result.pw){
+            return done(null, result)
+        }else{
+            return done(null, false, {message:'비밀번호가 틀립니다.'})
+        }
+    })
+}));
+
+//[3] 아이디, 비번 맞으면 세션정보를 만듦
+//id를 이용해 세션을 저장하는 코드(로그인 성공시 발동)
+//user: 아이디, 비번 검증 성공시 여기에 담아져옴
+//만든 세션의 id정보를 쿠키로 보냄
+passport.serializeUser(function(user, done){
+    done(null, user.id)
+});
+//이 세션 데이터를 가진 사람을 DB에서 찾아주세요(나중에 마이페이지 접속시 발동)
+passport.deserializeUser(function(아이디, done){
+    done(null, {})
 })

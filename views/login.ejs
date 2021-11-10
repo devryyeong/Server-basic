@@ -13,20 +13,17 @@
         <!-- navbar -->
         <%- include('nav.html') %>
 
-        <h5 class="container my-3">edit page 만드는 중</h5>
+        <h5 class="container my-3">LOGIN</h5>
         <hr class="container my-2">
         <div class="container mt-4">
-            <form action="/edit?_method=PUT" method="POST">
-                <div class="input-group mb-3">
-                    <span class="input-group-text" id="inputGroup-sizing-default">제목</span>
-                    <input value="<%= post.title %>" type="text" class="form-control" name="title">
-                    <!-- 보이지 않게 id정보(value)를 id(name)라는 이름으로 서버에 전달 -->
-                    <input type="text" value="<%= post._id %>" name="id" style="display: none;">
+            <form action="/login" method="POST">
+                <div class="form-group mb-3">
+                    <label>ID</label>
+                    <input type="text" class="form-control" name="id">
                 </div>
-                
-                <div class="input-group mb-3">
-                    <span class="input-group-text">내용</span>
-                    <input value="<%= post.contents %>" type="text" class="form-control" name="contents"></input>
+                <div class="form-group mb-3">
+                    <label>PASSWORD</label>
+                    <input type="password" class="form-control" name="pw">
                 </div>
                 
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
