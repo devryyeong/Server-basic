@@ -1,20 +1,16 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
-        <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
         <link rel="stylesheet" href="/public/main.css">
 
-        <title>Hello, world!</title>
+        <title>List</title>
     </head>
     <body>
-        <!-- navbar -->
-        <!-- .ejs에서만 가능한 문법 -->
-        <%- include('nav.html') %>
+        <!-- navbar (ejs에서만 가능한 문법)-->
+        <%- include('nav.ejs') %>
 
         <!-- Jumbotron -->
         <div class="p-5 mb-4 bg-light rounded-3">
@@ -35,7 +31,7 @@
                         제목: <%= posts[i].title %>
                     </label>
                     <p>내용: <%= posts[i].contents %></p>
-                    <button class="btn btn-danger btn-xs" data-id="<%= posts[i]._id %>">삭제</button>
+                    <button class="btn btn-danger btn-xs delete" data-id="<%= posts[i]._id %>">삭제</button>
                 </div>
             <% } %>
         </div>
@@ -44,9 +40,10 @@
         <!-- jQuery slim X -->
         <script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
 
+        <!-- 삭제 기능 -->
         <script>
             //delete라는 클래스명을 가진 요소를 클릭하면 내부$.ajax({})를 실행해
-            $('.delete').click(function(e){
+            $('.delete').click((e)=>{
                 //글번호=지금 클릭한 것(e.target)의 data-id
                 var listNum= e.target.dataset.id;
                 //this: 지금 이벤트 동작하는 곳(=지금 클릭한 것)
@@ -58,14 +55,13 @@
                     data: {_id: listNum}
                 }).done((res)=>{ //this값의 변형 방지를 위해 arrow function
                     console.log('success');
-                    //삭제버튼을 누른 div요소 제거
-                    pushedBtn.parent('div').fadeOut();
+                    //지금 누른 삭제버튼의 부모요소(div) 제거
+                    $(this).parent('div').fadeOut();
 
                 }),fail(function(xhr, textStatus, errorThrown){ //요청 실패시 실행
                     //console.log(xhr, textStatus, errorThrown);
                 });
             })
         </script>
-
     </body>
 </html>

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+        <link rel="stylesheet" href="/public/main.css">
+
+        <title>Search</title>
+    </head>
+    <body>
+        <!-- navbar -->
+        <%- include('nav.ejs') %>
+
+        <!-- Jumbotron -->
+        <div class="p-5 mb-4 bg-light rounded-3">
+            <div class="container-fluid py-5">
+                <h1 class="display-5 fw-bold">서버에서 가져온 TO DO LIST</h1>
+                <p class="col-md-8 fs-4">검색 결과를 보여드립니다~</p>
+            </div>
+        </div>
+
+        <!-- Checks -->
+        <div class="container">
+            <% for(var i=0; i<posts.length; i++){ %>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                    <p>번호: <%= posts[i]._id %></p>
+                    <label class="form-check-label" for="flexCheckDefault">
+                        제목: <%= posts[i].title %>
+                    </label>
+                    <p>내용: <%= posts[i].contents %></p>
+                    <button class="btn btn-danger btn-xs" data-id="<%= posts[i]._id %>">삭제</button>
+                </div>
+            <% } %>
+        </div>
+    </body>
+</html>
