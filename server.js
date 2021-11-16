@@ -7,16 +7,17 @@ const { response } = require('express');
 const express = require('express');
 const app = express();
 app.use(express.urlencoded({extended : true}));
-//const bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 //요청 데이터(body) 해석을 쉽게 도와줌 (express 4.16이상은 필요X)
 const MongoClient = require('mongodb').MongoClient;
 //method-override: HTML에서 PUT/DELETE 요청하기 위해
 const methodOverride = require('method-override')
 app.use(methodOverride('_method'))
 
+
 //HTML에 서버데이터 삽입 가능
 app.set('view engine', 'ejs');
-//미들웨어
+//미들웨어: 요청과 응답 사이에 실행되는 코드
 app.use('/public', express.static('public'));
 
 var db;
@@ -285,4 +286,49 @@ app.get('/search', (req, res)=>{
         console.log(result)
         res.render('search.ejs',{ posts: result })
     })
+})
+
+/////////////////////// router폴더와 파일로 API 관리하기
+app.use('/shop', require('./routes/shop.js'))
+app.use('/board/sub', require('./routes/board.js'))
+///////////////////////
+
+//이미지 업로드 서버 만들기
+//multer: 미들웨어처럼 사용가능
+let multer=require('multer');
+var path=require('path');
+//diskStorage:일반 하드에 저장, memoryStorage: RAM에 저장
+var storage=multer.diskStorage({
+    destination: function(req, file, cb){
+        cb(null, './public/image')
+    },
+    filename: function(req, file, cb){
+        const ext=path.extname(file.originalname); //확장자
+        const uploadFile=path.basename(file.originalname, ext)+'_'+Date.now()+ext;
+        cb(null, uploadFile)
+    },
+    filefilter: function(req, file, cb){
+        if(ext!=='.png' && ext!=='.jpg' && ext!=='.gif' && ext!=='.jpeg'){
+            return callback(res.end('Only images are allowed'), null)
+        }
+        callback(null, true)
+    },
+    limits: {
+        fileSize: 5*1024*1024
+    }
+});
+
+var upload=multer({storage: storage});
+
+app.get('/upload', function(req, res){
+    res.render('upload.ejs')
+})
+
+//"img": input의 name 속성이름
+app.post('/upload', upload.array('img', 2), function(req, res){
+    res.send('upload success');
+})
+
+app.get('/image/:imageName', function(req, res){
+    res.sendFile(__dirname+'/public/image/'+req.params.imageName)
 })
