@@ -43,7 +43,7 @@
         <!-- 삭제 기능 -->
         <script>
             //delete라는 클래스명을 가진 요소를 클릭하면 내부$.ajax({})를 실행해
-            $('.delete').click((e)=>{
+            $('.delete').click(function(e){
                 //글번호=지금 클릭한 것(e.target)의 data-id
                 var listNum= e.target.dataset.id;
                 //this: 지금 이벤트 동작하는 곳(=지금 클릭한 것)
@@ -54,11 +54,11 @@
                     url: '/delete',
                     data: {_id: listNum}
                 }).done((res)=>{ //this값의 변형 방지를 위해 arrow function
-                    console.log('success');
+                    console.log('success~!');
                     //지금 누른 삭제버튼의 부모요소(div) 제거
-                    $(this).parent('div').fadeOut();
+                    pushedBtn.parent('div').fadeOut();
 
-                }),fail(function(xhr, textStatus, errorThrown){ //요청 실패시 실행
+                }).fail(function(xhr, textStatus, errorThrown){ //요청 실패시 실행
                     //console.log(xhr, textStatus, errorThrown);
                 });
             })

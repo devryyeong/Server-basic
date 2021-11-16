@@ -225,8 +225,7 @@ app.post('/add', function(req, res){
 
 //삭제
 app.delete('/delete', function(req, res){
-    console.log(req.body);
-    console.log('삭제요청')
+    //console.log(req.body);
 
     //문자->정수 변환 필요함
     req.body._id=parseInt(req.body._id);
@@ -235,7 +234,7 @@ app.delete('/delete', function(req, res){
 
     //req.body에 담겨온 게시물 번호를 가진 글을 DB에서 찾아 삭제
     db.collection('post').deleteOne(deleteData, function(err, result){
-        if(result) {console.log(result)}
+        //if(result) {console.log(result)}
 
         //서버는 꼭 뭔가 응답해줘야함
         res.status(200).send({ message: '성공'});
